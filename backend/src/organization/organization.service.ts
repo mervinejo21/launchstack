@@ -21,4 +21,25 @@ export class OrganizationService {
       },
     })
   }
+
+  async findUserOrganizations(userId: string) {
+  return this.prisma.organization.findMany({
+    where: {
+      memberships: {
+        some: {
+          userId,
+        },
+      },
+    },
+    include: {
+      memberships: true,
+    },
+  })
+}
+
+async findOne(id: string) {
+  return this.prisma.organization.findUnique({
+    where: { id },
+  })
+}
 }
