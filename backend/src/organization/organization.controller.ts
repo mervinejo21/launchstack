@@ -3,6 +3,8 @@ import { OrganizationService } from './organization.service'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 import { CreateOrganizationDto } from './dto/create-organization.dto'
 import { OrganizationGuard } from 'src/auth/guards/organization.guard'
+import { Roles } from 'src/auth/decorators/roles.decorator'
+import { RolesGuard } from 'src/auth/guards/roles.guard'
 
 @Controller('organizations')
 export class OrganizationController {
@@ -20,5 +22,12 @@ export class OrganizationController {
   return this.organizationService.findUserOrganizations(
     req.user.userId,
   )
+  }
+
+  @Get(':organizationId/secure')
+  @UseGuards(JwtAuthGuard, OrganizationGuard, RolesGuard)
+  @Roles('OWNER')
+  secureEndpoint() {
+    return { message: 'You have access to this secure endpoint!' }
 }
 }
