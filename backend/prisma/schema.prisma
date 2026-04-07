@@ -13,25 +13,27 @@ model User {
   createdAt DateTime @default(now())
 
   memberships Membership[]
+  projects Project[]
 }
 
 model Organization {
-  id          String        @id @default(uuid())
-  name        String
-  createdAt   DateTime      @default(now())
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
 
   memberships Membership[]
+  projects    Project[]
 }
 
 model Membership {
-  id              String        @id @default(uuid())
-  role            Role          @default(MEMBER)
+  id   String @id @default(uuid())
+  role Role   @default(MEMBER)
 
-  userId          String
-  organizationId  String
+  userId         String
+  organizationId String
 
-  user            User          @relation(fields: [userId], references: [id])
-  organization    Organization  @relation(fields: [organizationId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
 
   @@unique([userId, organizationId])
 }
@@ -40,4 +42,17 @@ enum Role {
   OWNER
   ADMIN
   MEMBER
+}
+
+model Project {
+  id              String   @id @default(uuid())
+  name            String
+  description     String?
+  createdAt       DateTime @default(now())
+
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id])
+
+  createdById     String
+  createdBy       User @relation(fields: [createdById], references: [id])
 }

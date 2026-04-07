@@ -11,7 +11,7 @@ export class OrganizationController {
   constructor(private organizationService: OrganizationService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard, OrganizationGuard)
+  @UseGuards(JwtAuthGuard)
   create(@Body() dto: CreateOrganizationDto, @Req() req: any) {
     return this.organizationService.create(dto.name, req.user.userId)
   }
